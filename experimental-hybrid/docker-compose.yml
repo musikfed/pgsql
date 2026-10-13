@@ -1,0 +1,13 @@
+services:
+  kubectl-console:
+    image: ${KUBECTL_IMAGE:-bitnami/kubectl:latest}
+    profiles: ["tools"]
+    cpus: 0.25
+    mem_limit: 128m
+    environment:
+      KUBECONFIG: /kube/config
+    volumes:
+      - ${KUBECONFIG}:/kube/config:ro
+      - ./k8s:/workspace/k8s:ro
+    working_dir: /workspace
+    entrypoint: ["kubectl"]

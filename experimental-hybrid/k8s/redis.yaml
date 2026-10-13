@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis
+  namespace: onec-hybrid
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis
+          image: redis:7-alpine
+          args: ["redis-server","--appendonly","no","--maxmemory","128mb","--maxmemory-policy","allkeys-lru"]
+          resources:
+            requests:
+              cpu: 25m
+              memory: 32Mi
+            limits:
+              cpu: 250m
+              memory: 192Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis
+  namespace: onec-hybrid
+spec:
+  selector:
+    app: redis
+  ports:
+    - port: 6379

@@ -1,0 +1,72 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: onec-filedb
+  namespace: onec-hybrid
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 2Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: onec-app
+  namespace: onec-hybrid
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: onec-app
+  template:
+    metadata:
+      labels:
+        app: onec-app
+    spec:
+      initContainers:
+        - name: prepare-filedb-directory
+          image: busybox:1.36
+          command: ["sh","-ec","mkdir -p /srv/onec/filedb && chmod 0770 /srv/onec/filedb"]
+          volumeMounts:
+            - name: filedb
+              mountPath: /srv/onec
+      containers:
+        - name: onec
+          # Replace with an image you are licensed to use.
+          # It must initialize/use the blank file DB at /srv/onec/filedb
+          # and expose a supported published HTTP endpoint on port 8080.
+          image: example.invalid/replace-with-licensed-1c-image:latest
+          env:
+            - name: ONEC_FILE_DB
+              value: /srv/onec/filedb
+            - name: REDIS_URL
+              value: redis://redis:6379/0
+          ports:
+            - containerPort: 8080
+          volumeMounts:
+            - name: filedb
+              mountPath: /srv/onec
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: "2"
+              memory: 2Gi
+      volumes:
+        - name: filedb
+          persistentVolumeClaim:
+            claimName: onec-filedb
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: onec-app
+  namespace: onec-hybrid
+spec:
+  selector:
+    app: onec-app
+  ports:
+    - port: 8080
+      targetPort: 8080

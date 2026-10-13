@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: patroni-config
+  namespace: pgsql-lab
+data:
+  patroni.yml: |
+    scope: pgsql-k8s-lab
+    namespace: /service/
+    restapi:
+      listen: 0.0.0.0:8008
+    postgresql:
+      listen: 0.0.0.0:5432
+      data_dir: /var/lib/postgresql/patroni
+      bin_dir: /usr/lib/postgresql/16/bin
+      pgpass: /var/lib/postgresql/.pgpass
+    bootstrap:
+      dcs:
+        ttl: 30
+        loop_wait: 10
+        retry_timeout: 10
+        postgresql:
+          use_pg_rewind: true
+          use_slots: true
+      initdb:
+        - encoding: UTF8
+        - data-checksums

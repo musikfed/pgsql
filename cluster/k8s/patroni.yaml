@@ -1,0 +1,92 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: patroni
+  namespace: pgsql-lab
+spec:
+  clusterIP: None
+  selector:
+    app: patroni
+  ports:
+    - name: postgres
+      port: 5432
+    - name: api
+      port: 8008
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: patroni
+  namespace: pgsql-lab
+spec:
+  serviceName: patroni
+  replicas: 3
+  selector:
+    matchLabels:
+      app: patroni
+  template:
+    metadata:
+      labels:
+        app: patroni
+    spec:
+      containers:
+        - name: patroni
+          image: ghcr.io/replace-me/pgsql-patroni:16-lab
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  fieldPath: status.podIP
+            - name: PATRONI_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: PATRONI_SCOPE
+              value: pgsql-k8s-lab
+            - name: PATRONI_ETCD3_HOSTS
+              value: etcd-0.etcd:2379,etcd-1.etcd:2379,etcd-2.etcd:2379
+            - name: PATRONI_SUPERUSER_USERNAME
+              value: postgres
+            - name: PATRONI_SUPERUSER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: patroni-auth
+                  key: postgres-password
+            - name: PATRONI_REPLICATION_USERNAME
+              value: replicator
+            - name: PATRONI_REPLICATION_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: patroni-auth
+                  key: replication-password
+          command: ["/bin/sh","-ec"]
+          args:
+            - |
+              export PATRONI_RESTAPI_CONNECT_ADDRESS="$POD_IP:8008"
+              export PATRONI_POSTGRESQL_CONNECT_ADDRESS="$POD_IP:5432"
+              exec patroni /etc/patroni/patroni.yml
+          ports:
+            - containerPort: 5432
+            - containerPort: 8008
+          volumeMounts:
+            - name: patroni-config
+              mountPath: /etc/patroni/patroni.yml
+              subPath: patroni.yml
+            - name: data
+              mountPath: /var/lib/postgresql/patroni
+      volumes:
+        - name: patroni-config
+          configMap:
+            name: patroni-config
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 20Gi
