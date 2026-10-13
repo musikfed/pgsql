@@ -1,0 +1,45 @@
+name: pgsql-lab-static-checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  static:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Shell syntax
+        run: |
+          bash -n scripts/*.sh
+          bash -n cluster/podman/*.sh
+          bash -n experimental-hybrid/*.sh
+
+      - name: Docker Compose syntax
+        run: |
+          cp docker/postgres16/.env.example docker/postgres16/.env
+          docker compose -f docker/postgres16/docker-compose.yml config >/dev/null
+
+          cp cluster/docker/.env.example cluster/docker/.env
+          docker compose --env-file cluster/docker/.env -f cluster/docker/docker-compose.yml config >/dev/null
+
+          cp experimental-hybrid/.env.example experimental-hybrid/.env
+          docker compose --env-file experimental-hybrid/.env -f experimental-hybrid/docker-compose.yml --profile tools config >/dev/null
+
+      - name: YAML parse
+        run: |
+          python3 -m pip install --quiet pyyaml
+          python3 - <<'PY'
+          from pathlib import Path
+          import yaml
+          paths = list(Path("cluster/k8s").glob("*.yaml")) + list(Path("experimental-hybrid/k8s").glob("*.yaml"))
+          for path in paths:
+              with path.open("r", encoding="utf-8") as f:
+                  docs = list(yaml.safe_load_all(f))
+              assert docs, f"no YAML docs in {path}"
+              print(path, len(docs))
+          PY
+
+      - name: Repository static helper
+        run: bash scripts/validate.sh
