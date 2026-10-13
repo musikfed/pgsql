@@ -8,13 +8,11 @@ services:
       - "${POSTGRES_PORT:-5432}:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
-      - ../../configs/postgresql/common-16gb.conf:/etc/postgresql/conf.d/10-common.conf:ro
+      - ../../configs/postgresql/common-16gb.conf:/etc/postgresql/postgresql.conf:ro
     command:
       - postgres
       - -c
-      - config_file=/var/lib/postgresql/data/postgresql.conf
-      - -c
-      - include_if_exists=/etc/postgresql/conf.d/10-common.conf
+      - config_file=/etc/postgresql/postgresql.conf
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-app} -d ${POSTGRES_DB:-app}"]
       interval: 10s
