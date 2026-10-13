@@ -18,20 +18,31 @@ in `patroni.yaml`.
 kubectl apply -f namespace.yaml
 kubectl apply -f etcd.yaml
 kubectl apply -f patroni-config.yaml
+
 cp patroni-secret.example.yaml patroni-secret.local.yaml
 # edit passwords; do not commit the local file
 kubectl apply -f patroni-secret.local.yaml
+
 kubectl apply -f patroni.yaml
+kubectl apply -f haproxy.yaml
+```
+
+Clients inside the cluster can use:
+
+```text
+patroni-haproxy:5000  -> current primary
+patroni-haproxy:5001  -> replicas
 ```
 
 ## Missing for production
 
 - TLS and certificate rotation;
-- leader-only service/router;
 - anti-affinity and topology spread;
 - PodDisruptionBudget;
 - backup/PITR;
 - monitoring;
 - tested StorageClass;
 - network policies;
-- secret manager integration.
+- secret manager integration;
+- multiple HAProxy replicas or another proven connection router;
+- chaos/failover tests.
