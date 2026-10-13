@@ -1,15 +1,12 @@
-# pgsql
+# PostgreSQL 16 Lab
 
-pgsql репозиторийі қазір минималды жоба дайындамасы. Негізгі тармақта техникалық архитектураны болжамсыз сипаттауға жеткілікті іске асыру материалы әлі жоқ.
+**Ubuntu 24.04 LTS + PostgreSQL 16** үшін инженерлік зертхана: native орнату, Docker, Podman, Kubernetes, 1C:Enterprise тюнингі, web/API, РИБ жүктемелері және Patroni + etcd HA эксперименті.
 
-## Architecture / Архитектура
+> **Эксперименттік жоба.** Production алдында compatibility, load, failover, backup/restore және security тесттері міндетті.
 
-Current repository is minimal; application architecture is not documented yet.
+Гибридтік нұсқада Docker Compose тек ресурсы шектеулі `kubectl` басқару контейнерін іске қосады, ал 1C, Redis және Nginx workload-тары сыртқы Kubernetes ішінде жұмыс істейді.
 
-## Project structure / Структура проекта
-
-- `README.md` — current project placeholder and contacts
-- implementation files — not present in the current default branch
+1C файлдық базасы Redis ішінде тікелей сақталмайды. Redis filesystem емес; база PVC/filesystem ішінде, Redis cache/coordination үшін қолданылады.
 
 ## Contact / Контакты
 

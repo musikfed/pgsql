@@ -1,15 +1,22 @@
-# pgsql
+# PostgreSQL 16 Lab
 
-pgsql रिपॉज़िटरी अभी एक न्यूनतम प्रोजेक्ट प्लेसहोल्डर है। वर्तमान मुख्य शाखा में तकनीकी आर्किटेक्चर का सटीक वर्णन करने के लिए पर्याप्त कार्यान्वयन सामग्री नहीं है।
+**Ubuntu 24.04 LTS पर PostgreSQL 16** के लिए इंजीनियरिंग लैब: native installation, Docker, Podman, Kubernetes, 1C:Enterprise tuning, web/API workloads, RIB/exchange workloads और Patroni + etcd HA प्रयोग।
 
-## Architecture / Архитектура
+> यह **experimental** प्रोजेक्ट है। Production से पहले compatibility, load, failover, backup/restore और security testing आवश्यक है।
 
-Current repository is minimal; application architecture is not documented yet.
+## Architecture
 
-## Project structure / Структура проекта
+```text
+Native / Docker / Podman PostgreSQL 16
+             |
+      Patroni + etcd HA
+             |
+      Kubernetes experiment
+```
 
-- `README.md` — current project placeholder and contacts
-- implementation files — not present in the current default branch
+Hybrid प्रयोग में Docker Compose केवल कम-resource वाला `kubectl` console चलाता है; 1C, Redis और Nginx workloads बाहरी Kubernetes cluster में चलते हैं।
+
+1C file database सीधे Redis में नहीं रखी जाती। Redis filesystem नहीं है; file database PVC/filesystem पर रहती है और Redis केवल cache/coordination के लिए है।
 
 ## Contact / Контакты
 

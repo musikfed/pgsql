@@ -1,15 +1,12 @@
-# pgsql
+# PostgreSQL 16 Lab
 
-pgsql репозиторийа билигин минимальнай проект заготовката. Сүрүн тармахха техникалыы архитектураны таайыыта суох суруйарга коду кыра.
+**Ubuntu 24.04 LTS + PostgreSQL 16** үлэтигэр инженернай лаборатория: native туруоруу, Docker, Podman, Kubernetes, 1C:Enterprise tuning, web/API, РИБ нагрузката уонна Patroni + etcd HA эксперимент.
 
-## Architecture / Архитектура
+> **Экспериментальнай проект.** Production иннинэ compatibility, load, failover, backup/restore уонна security тесттэр наадалар.
 
-Current repository is minimal; application architecture is not documented yet.
+Hybrid схемата Docker Compose кыра ресурсунан `kubectl` control container-ы эрэ ыытар; 1C, Redis уонна Nginx workload-тар тас Kubernetes cluster-га үлэлииллэр.
 
-## Project structure / Структура проекта
-
-- `README.md` — current project placeholder and contacts
-- implementation files — not present in the current default branch
+1C файловай база Redis иһигэр түүтүнэн ууруллубат. Redis filesystem буолбат; база PVC/filesystem-га, Redis cache/coordination үлэтигэр туттуллар.
 
 ## Contact / Контакты
 

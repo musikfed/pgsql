@@ -1,0 +1,10 @@
+.env
+*.local.yaml
+*.local.yml
+*.secret.yaml
+*.secret.yml
+secrets/
+backups/
+*.dump
+*.backup
+*.sql.gz
