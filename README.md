@@ -83,4 +83,3 @@ docs/                     architecture and runbooks
 
 [**Visual architecture, translations and contact**](docs/showcase/README.md)
 
-![pgsql architecture](docs/showcase/overview.svg)
