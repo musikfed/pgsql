@@ -1,6 +1,5 @@
 # pgsql · Visual showcase / Презентация
 
-![Project-specific editable vector architecture](overview.svg)
 
 **Инфраструктурные инструменты / Infrastructure lab and tools** · PostgreSQL 16 → Ubuntu / Docker → Patroni / etcd → Kubernetes lab · **experimental**.
 
