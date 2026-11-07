@@ -1,0 +1,21 @@
+{
+  "schema_version": "1.0",
+  "id": "pgsql",
+  "title": "pgsql",
+  "version": "—",
+  "description": "Практический лабораторный репозиторий вокруг PostgreSQL 16 на Ubuntu 24.04 LTS: нативная установка, Docker, Podman, Kubernetes, профили настройки под 1С:Предприятие, веб-нагрузки, РИБ, а также экспериментальные HA-схемы Patroni + etcd.",
+  "subtitle": null,
+  "tags": [
+    "Shell"
+  ],
+  "visibility": "public",
+  "publication": "publish_on_merge",
+  "public_private_approved": false,
+  "display_mode": "diagram",
+  "status": "Черновик — ожидает проверки",
+  "repo_url": "https://github.com/musikfed/pgsql",
+  "screenshots": [],
+  "cover": "vitrine/generated/cover.svg",
+  "cover_type": "schematic-not-screenshot",
+  "screenshot_source": "not-available"
+}
